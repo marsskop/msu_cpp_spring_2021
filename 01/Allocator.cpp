@@ -1,9 +1,12 @@
 #include <cstdlib>
 #include "Allocator.h"
+#include <iostream>
 
 void Allocator::makeAllocator(size_t maxSize) {
-    base = (char*) std::malloc(maxSize);
-    if (base == nullptr){
+	delete[] base;
+	delete[] offset;
+    base = new char[maxSize];
+    if (!base){
         throw "Error";
     }
     else {
@@ -16,6 +19,9 @@ char* Allocator::alloc(size_t size) {
     if (!size){
         return nullptr;
     }
+    if (!totalSize){
+    	return nullptr;
+    }
     char* newoffset = offset + size;
     if (newoffset > base + totalSize - 1){
         return nullptr;
@@ -25,6 +31,15 @@ char* Allocator::alloc(size_t size) {
     return ptr;
 }
 
+char* Allocator::baseAddress() const {
+	return this->base;
+}
+
 void Allocator::reset() {
     offset = base;
+}
+
+Allocator::~Allocator() {
+	delete[] base;
+	delete[] offset;
 }
