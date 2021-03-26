@@ -41,5 +41,4 @@ void Allocator::reset() {
 
 Allocator::~Allocator() {
 	delete[] base;
-	delete[] offset;
 }
