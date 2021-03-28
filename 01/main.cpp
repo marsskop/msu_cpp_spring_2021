@@ -13,6 +13,16 @@ void DefaultTest(){
 	assert(p1 && p2 && !p3 && p4);
 }
 
+void LimitTest(){
+	Allocator CustomAllocator;
+	CustomAllocator.makeAllocator(10);
+	char* p1 = CustomAllocator.alloc(10);
+	char* p2 = CustomAllocator.alloc(1);
+	CustomAllocator.reset();
+	char* p3 = CustomAllocator.alloc(10);
+	assert(p1 && !p2 && p3);
+}
+
 void AllocBefore(){
 	Allocator CustomAllocator;
 	char* p1 = CustomAllocator.alloc(200);
@@ -25,13 +35,15 @@ void FewAllocators(){
 	char* ad1 = CustomAllocator.baseAddress();
 	CustomAllocator.makeAllocator(1024);
 	char* ad2 = CustomAllocator.baseAddress();
-	assert(ad1 == ad2);
+	char* p = CustomAllocator.alloc(1024);
+	assert((ad1 == ad2) && p);
 }
 
 int main() {
-    DefaultTest();
+	DefaultTest();
+	LimitTest();
 	AllocBefore();
 	FewAllocators();
 	std::cout << "Success!" << std::endl;
-    return 0;
+	return 0;
 }
