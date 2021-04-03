@@ -25,9 +25,16 @@ void TokenParser::Parse(const std::string& text) {
 			pos += step;
 		}
 		else {
-			auto num = std::stoi(text.substr(pos, step));
-			if (digitcallback) {
-				digitcallback(num);
+			try {
+				auto num = std::stoull(text.substr(pos, step));
+				if (digitcallback) {
+					digitcallback(num);
+				}
+			}
+			catch (const std::out_of_range& e) {
+				if (stringcallback) {
+					stringcallback(text.substr(pos, step));
+				}
 			}
 			pos += step;
 		}

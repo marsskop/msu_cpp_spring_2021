@@ -7,7 +7,7 @@
 #define TOKENPARSER_H
 
 using startendcall = void(*)(void);
-using digitcall = std::function<void(int)>;
+using digitcall = std::function<void(unsigned long long)>;
 using stringcall = std::function<void(const std::string&)>;
 
 class TokenParser {
