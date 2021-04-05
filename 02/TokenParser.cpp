@@ -9,22 +9,21 @@ void TokenParser::Parse(const std::string& text) {
 
 	while (pos < text.length()) {
 		step = 0;
-		while (std::isspace(text[pos])) {
+		while (std::isspace(text[pos]) && (pos < text.length())) {
 			pos++;
 		}
-		while (std::isdigit(text[pos + step])) {
+		while (std::isdigit(text[pos + step]) && (pos + step < text.length())) {
 			step++;
 		}
-		if ((!std::isdigit(text[pos + step])) && (!std::isspace(text[pos + step]))) {
+		if ((!std::isdigit(text[pos + step])) && (!std::isspace(text[pos + step])) && (pos + step < text.length())) {
 			while ((!std::isspace(text[pos + step])) && (pos + step < text.length())) {
 				step++;
 			}
 			if (stringcallback) {
 				stringcallback(text.substr(pos, step));
 			}
-			pos += step;
 		}
-		else {
+		else if (pos + step < text.length()){
 			try {
 				auto num = std::stoull(text.substr(pos, step));
 				if (digitcallback) {
@@ -36,8 +35,8 @@ void TokenParser::Parse(const std::string& text) {
 					stringcallback(text.substr(pos, step));
 				}
 			}
-			pos += step;
 		}
+		pos += step;
 	}
 
 	if (endcallback) {
