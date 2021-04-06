@@ -70,14 +70,15 @@ void NoCallbacks() {
 
 void BigNum() {
 	std::vector<std::string> nums;
+	std::vector<std::string> strs;
 	digitcall digit_callback = [&](std::uint64_t num){
 		nums.push_back(std::to_string(num));
 		std::cout << num << std::endl;
 	};
 	stringcall string_callback = [&](const std::string& str){
+		strs.push_back(str);
 		std::cout << str << std::endl;
 	};
-
 	std::string input("18446744073709551615   18446744073709551616");
 	TokenParser CustomParser;
 	CustomParser.SetDigitTokenCallback(digit_callback);
@@ -85,9 +86,43 @@ void BigNum() {
 
 	CustomParser.Parse(input);
 
-	std::vector<std::string> ans = {"18446744073709551615"};
-	for (int i=0; i < ans.size(); i++) {
-		assert(ans[i] == nums[i]);
+	std::vector<std::string> numans = {"18446744073709551615"};
+	std::vector<std::string> strans = {"18446744073709551616"};
+	for (int i=0; i < numans.size(); i++) {
+		assert(numans[i] == nums[i]);
+	}
+	for (int i=0; i < strans.size(); i++) {
+		assert(strans[i] == strs[i]);
+	}
+}
+
+void SingleCharacter() {
+	std::vector<std::string> nums;
+	std::vector<std::string> strs;
+	digitcall digit_callback = [&](std::uint64_t num){
+		nums.push_back(std::to_string(num));
+		std::cout << num << std::endl;
+	};
+	stringcall string_callback = [&](const std::string& str){
+		strs.push_back(str);
+		std::cout << str << std::endl;
+	};
+	std::string input1("1");
+	std::string input2("a");
+	TokenParser CustomParser;
+	CustomParser.SetDigitTokenCallback(digit_callback);
+	CustomParser.SetStringTokenCallback(string_callback);
+
+	CustomParser.Parse(input1);
+	CustomParser.Parse(input2);
+
+	std::vector<std::string> numans = {"1"};
+	std::vector<std::string> strans = {"a"};
+	for (int i=0; i < numans.size(); i++) {
+		assert(numans[i] == nums[i]);
+	}
+	for (int i=0; i < strans.size(); i++) {
+		assert(strans[i] == strs[i]);
 	}
 }
 
@@ -140,6 +175,7 @@ int main() {
 	StartEndCallbacks();
 	NoCallbacks();
 	BigNum();
+	SingleCharacter();
 	EmptyInput();
 	SpacesInput();
 	std::cout << "Success!" << std::endl;
