@@ -8,10 +8,18 @@ void CreationTest() {
 	assert(m.getColumns() == cols);
 }
 
+void SingularTest() {
+	Matrix m(1, 1);
+	m[0][0] = 1;
+	assert((m.getRows() == 1) && (m.getColumns() == 1));
+	assert(m[0][0] == 1);
+}
+
 void IndexationTest() {
 	const size_t rows = 3;
 	const size_t cols = 5;
-	bool except = false;
+	bool exceptrows = false;
+	bool exceptcols = false;
 	Matrix m(rows, cols);
 	for (size_t i=0; i < rows; i++) {
 		for (size_t j=0; j < cols; j++) {
@@ -27,9 +35,16 @@ void IndexationTest() {
 		int32_t a = m[4][1];
 	}
 	catch (std::out_of_range) {
-		except = true;
+		exceptrows = true;
 	}
-	assert(except);
+	assert(exceptrows);
+	try {
+		int32_t a = m[1][6];
+	}
+	catch (std::out_of_range) {
+		exceptcols = true;
+	}
+	assert(exceptcols);
 }
 
 void MultiplyTest() {
@@ -132,6 +147,7 @@ void OutputTest() {
 
 int main() {
 	CreationTest();
+	SingularTest();
 	IndexationTest();
 	MultiplyTest();
 	SumTest();

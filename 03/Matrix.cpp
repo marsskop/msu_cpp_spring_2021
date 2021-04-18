@@ -10,6 +10,10 @@ Matrix::Row::Row(size_t columns) {
 	data_ = new int32_t[columns]();
 }
 
+Matrix::Row::~Row() {
+	data_ = nullptr;
+}
+
 int32_t& Matrix::Row::operator[](size_t j) const {
 	if (j >= size) {
 		throw std::out_of_range("");
@@ -24,7 +28,7 @@ Matrix::Row& Matrix::Row::operator*=(int32_t a) {
 	return *this;
 }
 
-Matrix::Row Matrix::Row::operator+(Matrix::Row b) {
+Matrix::Row Matrix::Row::operator+(const Matrix::Row b) const{
 	if (size != b.size) {
 		throw std::length_error("");
 	}
@@ -35,7 +39,7 @@ Matrix::Row Matrix::Row::operator+(Matrix::Row b) {
 	return res;
 }
 
-bool Matrix::Row::operator==(Matrix::Row b) {
+bool Matrix::Row::operator==(const Matrix::Row b) const {
 	if (size != b.size) {
 		return false;
 	}
@@ -47,7 +51,7 @@ bool Matrix::Row::operator==(Matrix::Row b) {
 	return true;
 }
 
-bool Matrix::Row::operator!=(Matrix::Row b) {
+bool Matrix::Row::operator!=(const Matrix::Row b) const {
 	return !(*this == b);
 }
 
@@ -61,7 +65,7 @@ Matrix::Matrix(size_t rows, size_t columns) {
 }
 
 Matrix::~Matrix() {
-	delete[] rows_;
+	rows_ = nullptr;
 }
 
 Matrix::Row& Matrix::operator[](size_t i) const {
@@ -78,7 +82,7 @@ Matrix& Matrix::operator*=(int32_t a) {
 	return *this;
 }
 
-Matrix Matrix::operator+(Matrix const &b) {
+Matrix Matrix::operator+(Matrix const &b) const {
 	if ((i_rows != b.i_rows) && (j_columns != b.j_columns)) {
 		throw std::length_error("");
 	}
@@ -89,7 +93,7 @@ Matrix Matrix::operator+(Matrix const &b) {
 	return res;
 }
 
-bool Matrix::operator==(Matrix b) {
+bool Matrix::operator==(const Matrix b) const {
 	if ((i_rows != b.i_rows) && (j_columns != b.j_columns)) {
 		return false;
 	}
@@ -101,7 +105,7 @@ bool Matrix::operator==(Matrix b) {
 	return true;
 }
 
-bool Matrix::operator!=(Matrix b) {
+bool Matrix::operator!=(const Matrix b) const {
 	return !(*this == b);
 }
 
@@ -115,10 +119,10 @@ std::ostream& operator<<(std::ostream &out, const Matrix &matrix) {
 	return out;
 }
 
-size_t Matrix::getRows() {
+size_t Matrix::getRows() const {
 	return i_rows;
 }
 
-size_t Matrix::getColumns() {
+size_t Matrix::getColumns() const {
 	return j_columns;
 }
