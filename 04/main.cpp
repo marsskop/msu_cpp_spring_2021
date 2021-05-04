@@ -27,6 +27,8 @@ void SumTest() {
 	BigInt c("-1000");
 	BigInt d("-999");
 	int e = 1000;
+	BigInt f("0");
+	BigInt j("1");
 	char* xx;
 	const char* xxns;
 
@@ -64,6 +66,20 @@ void SumTest() {
 	for (int i = 0; i < strlen(xx); i++) {
 		assert(xx[i] = xxns[i]);
 	}
+
+	x = b + f;
+	xx = x.getNum();
+	xxns = "999";
+	for (int i = 0; i < strlen(xx); i++) {
+		assert(xx[i] = xxns[i]);
+	}
+
+	x = b + j;
+	xx = x.getNum();
+	xxns = "1000";
+	for (int i = 0; i < strlen(xx); i++) {
+		assert(xx[i] = xxns[i]);
+	}
 }
 
 void SubtractTest() {
@@ -72,6 +88,8 @@ void SubtractTest() {
 	BigInt c("-1000");
 	BigInt d("-999");
 	int e = 1000;
+	BigInt f("0");
+	BigInt j("1");
 	char* xx;
 	const char* xxns;
 
@@ -116,6 +134,20 @@ void SubtractTest() {
 	for (int i = 0; i < strlen(xx); i++) {
 		assert(xx[i] = xxns[i]);
 	}
+
+	x = a - f;
+	xx = x.getNum();
+	xxns = "1000";
+	for (int i = 0; i < strlen(xx); i++) {
+		assert(xx[i] = xxns[i]);
+	}
+
+	x = a - j;
+	xx = x.getNum();
+	xxns = "999";
+	for (int i = 0; i < strlen(xx); i++) {
+		assert(xx[i] = xxns[i]);
+	}
 }
 
 void MultiplyTest() {
@@ -125,6 +157,7 @@ void MultiplyTest() {
 	BigInt d("-1234");
 	BigInt e("0");
 	int f = 12;
+	BigInt j("1");
 	char* xx;
 	const char* xxns;
 
@@ -162,6 +195,13 @@ void MultiplyTest() {
 	for (int i = 0; i < strlen(xx); i++) {
 		assert(xx[i] = xxns[i]);
 	}
+
+	x = a * j;
+	xx = x.getNum();
+	xxns = "12";
+	for (int i = 0; i < strlen(xx); i++) {
+		assert(xx[i] = xxns[i]);
+	}
 }
 
 void CompareTest() {
@@ -170,12 +210,15 @@ void CompareTest() {
 	BigInt c("-1000");
 	BigInt d("-999");
 	BigInt e("1000");
+	BigInt f("0");
+	BigInt j("-1");
 	assert(a == e);
 	assert(a > b);
 	assert(a != c);
 	assert(a > c);
 	assert(c < d);
 	assert(d >= c);
+	assert(j < f);
 }
 
 void CopyTest() {

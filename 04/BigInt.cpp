@@ -39,9 +39,7 @@ BigInt::BigInt(BigInt &&a) {
 	if (this == &a) {
 		return;
 	}
-	num = new char[strlen(a.num)];
-	std::copy(a.num, a.num + strlen(a.num), num);
-	num[strlen(a.num)] = '\0';
+	num = a.num;
 	minus = a.minus;
 	a.minus = false;
 	a.num = nullptr;
@@ -65,10 +63,7 @@ BigInt& BigInt::operator=(BigInt &&a) {
 		return *this;
 	}
 	delete[] num;
-	char* tmp = new char[strlen(a.num) + 1];
-	num = tmp;
-	std::copy(a.num, a.num + strlen(a.num), num);
-	num[strlen(a.num)] = '\0';
+	num = a.num;
 	minus = a.minus;
 	a.minus = false;
 	a.num = nullptr;
