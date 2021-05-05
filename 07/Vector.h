@@ -101,7 +101,7 @@ private:
 	size_t cap;
 	alloc_t alloc;
 	T* data;
-	using Iterator = Iterator<T>;
+	using iterator = Iterator<T>;
 public:
 	Vector(size_t num) noexcept: size_(0), cap(num), data(alloc.allocate(num)) {}
 	Vector(size_t num, const T& val) noexcept: size_(num), cap(num), data(alloc.allocate(num)) {
@@ -225,17 +225,17 @@ public:
 	}
 
 	// iterators
-	Iterator begin() {
+	iterator begin() {
 		return Iterator(data);
 	}
-	Iterator end() {
+	iterator end() {
 		return Iterator(data + size_);
 	}
-	std::reverse_iterator<Iterator> rbegin() {
-		return std::reverse_iterator<Iterator>(end());
+	std::reverse_iterator<iterator> rbegin() {
+		return std::reverse_iterator<iterator>(end());
 	}
-	std::reverse_iterator<Iterator> rend() {
-		return std::reverse_iterator<Iterator>(begin());
+	std::reverse_iterator<iterator> rend() {
+		return std::reverse_iterator<iterator>(begin());
 	}
 };
 
