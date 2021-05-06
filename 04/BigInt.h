@@ -12,12 +12,12 @@ private:
 	char *num;
 	bool minus;
 
-	char digit2char(int x);
-	int char2digit(char x);
-	bool asmaller(const char* a, const char* b);
-	BigInt sum(const BigInt& a, const BigInt& b);
-	BigInt subtract(const BigInt& a, const BigInt& b);
-	BigInt naivemul(const BigInt& a, const BigInt& b);
+	char digit2char(int x) const;
+	int char2digit(char x) const;
+	bool asmaller(const char* a, const char* b) const;
+	BigInt sum(const BigInt& a, const BigInt& b) const;
+	BigInt subtract(const BigInt& a, const BigInt& b) const;
+	BigInt naivemul(const BigInt& a, const BigInt& b) const;
 public:
 	BigInt();
 	BigInt(int number);
@@ -29,22 +29,22 @@ public:
 	BigInt& operator=(const BigInt& a);
 	BigInt& operator=(BigInt&& a);
 
-	BigInt operator+(const BigInt& a);
-	BigInt operator+(const int a);
-	BigInt operator-();
-	BigInt operator-(const BigInt& a);
-	BigInt operator-(const int a);
-	BigInt operator*(const BigInt& a);
-	BigInt operator*(const int a);
+	BigInt operator+(const BigInt& a) const;
+	BigInt operator+(const int a) const;
+	BigInt operator-() const;
+	BigInt operator-(const BigInt& a) const;
+	BigInt operator-(const int a) const;
+	BigInt operator*(const BigInt& a) const;
+	BigInt operator*(const int a) const;
 
-	bool operator==(const BigInt& a);
-	bool operator!=(const BigInt& a);
-	bool operator>(const BigInt& a);
-	bool operator>=(const BigInt& a);
-	bool operator<(const BigInt& a);
-	bool operator<=(const BigInt& a);
+	bool operator==(const BigInt& a) const;
+	bool operator!=(const BigInt& a) const;
+	bool operator>(const BigInt& a) const;
+	bool operator>=(const BigInt& a) const;
+	bool operator<(const BigInt& a) const;
+	bool operator<=(const BigInt& a) const;
 
-	char* getNum();
+	char* getNum() const;
 
 	friend std::ostream& operator<<(std::ostream& oss, const BigInt& a);
 };

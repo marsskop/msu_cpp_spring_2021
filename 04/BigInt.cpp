@@ -70,15 +70,15 @@ BigInt& BigInt::operator=(BigInt &&a) {
 	return *this;
 }
 
-char BigInt::digit2char(int x) {
+char BigInt::digit2char(int x)  const{
 	return x + '0';
 }
 
-int BigInt::char2digit(char x) {
+int BigInt::char2digit(char x)  const{
 	return x - '0';
 }
 
-bool BigInt::asmaller(const char* a, const char* b) {
+bool BigInt::asmaller(const char* a, const char* b) const {
 	// compare two string of digits
 	int sizea = strlen(a);
 	int sizeb = strlen(b);
@@ -101,7 +101,7 @@ bool BigInt::asmaller(const char* a, const char* b) {
 	return false;
 }
 
-BigInt BigInt::sum(const BigInt& a, const BigInt& b) {
+BigInt BigInt::sum(const BigInt& a, const BigInt& b) const {
 	// sum of two positive char ints
 	char* astr = a.num;
 	char* bstr = b.num;
@@ -151,7 +151,7 @@ BigInt BigInt::sum(const BigInt& a, const BigInt& b) {
 	return ans;
 }
 
-BigInt BigInt::subtract(const BigInt& a, const BigInt& b) {
+BigInt BigInt::subtract(const BigInt& a, const BigInt& b) const {
 	// subtraction of two BigInts, minus is ignored
 	char* astr = a.num;
 	char* bstr = b.num;
@@ -207,7 +207,7 @@ BigInt BigInt::subtract(const BigInt& a, const BigInt& b) {
 	return ans;
 }
 
-BigInt BigInt::operator+(const BigInt &a) {
+BigInt BigInt::operator+(const BigInt &a) const {
 	if (!minus && !a.minus) {
 		return sum(*this, a);
 	}
@@ -223,18 +223,18 @@ BigInt BigInt::operator+(const BigInt &a) {
 
 }
 
-BigInt BigInt::operator+(const int a) {
+BigInt BigInt::operator+(const int a) const {
 	BigInt tmp(a);
 	return *this + tmp;
 }
 
-BigInt BigInt::operator-() {
+BigInt BigInt::operator-() const {
 	BigInt tmp(num);
 	tmp.minus = !minus;
 	return tmp;
 }
 
-BigInt BigInt::operator-(const BigInt &a) {
+BigInt BigInt::operator-(const BigInt &a) const {
 	if (!minus && !a.minus) {
 		return subtract(*this, a);
 	}
@@ -249,12 +249,12 @@ BigInt BigInt::operator-(const BigInt &a) {
 	}
 }
 
-BigInt BigInt::operator-(const int a) {
+BigInt BigInt::operator-(const int a) const {
 	BigInt tmp(a);
 	return *this - tmp;
 }
 
-BigInt BigInt::naivemul(const BigInt& a, const BigInt& b) {
+BigInt BigInt::naivemul(const BigInt& a, const BigInt& b) const {
 	char* astr = a.num;
 	char* bstr = b.num;
 	int sizea = strlen(astr);
@@ -290,7 +290,7 @@ BigInt BigInt::naivemul(const BigInt& a, const BigInt& b) {
 	return ans;
 }
 
-BigInt BigInt::operator*(const BigInt &a) {
+BigInt BigInt::operator*(const BigInt &a) const {
 	if ((!minus && !a.minus) || (minus && a.minus)) {
 		return naivemul(*this, a);
 	}
@@ -299,12 +299,12 @@ BigInt BigInt::operator*(const BigInt &a) {
 	}
 }
 
-BigInt BigInt::operator*(const int a) {
+BigInt BigInt::operator*(const int a) const {
 	BigInt tmp(a);
 	return *this * tmp;
 }
 
-bool BigInt::operator==(const BigInt &a) {
+bool BigInt::operator==(const BigInt &a) const {
 	if (this == &a) {
 		return true;
 	}
@@ -315,11 +315,11 @@ bool BigInt::operator==(const BigInt &a) {
 
 }
 
-bool BigInt::operator!=(const BigInt &a) {
+bool BigInt::operator!=(const BigInt &a) const {
 	return !(*this == a);
 }
 
-bool BigInt::operator>(const BigInt &a) {
+bool BigInt::operator>(const BigInt &a) const {
 	if (this == &a) {
 		return false;
 	}
@@ -337,19 +337,19 @@ bool BigInt::operator>(const BigInt &a) {
 	}
 }
 
-bool BigInt::operator>=(const BigInt &a) {
+bool BigInt::operator>=(const BigInt &a) const {
 	return ((*this == a) || (*this > a));
 }
 
-bool BigInt::operator<(const BigInt &a) {
+bool BigInt::operator<(const BigInt &a) const {
 	return !(*this >= a);
 }
 
-bool BigInt::operator<=(const BigInt &a) {
+bool BigInt::operator<=(const BigInt &a) const {
 	return !(*this > a);
 }
 
-char* BigInt::getNum() {
+char* BigInt::getNum() const {
 	if (not num) {
 		return nullptr;
 	}
