@@ -19,7 +19,7 @@ Error Deserializer::read(bool& arg) {
 	std::string text;
 	in_ >> text;
 	if (text.size() == 0) {
-		return Error::NoError;
+		return Error::CorruptedArchive;
 	}
 	if (text == "true") {
 		arg = true;
@@ -37,11 +37,11 @@ Error Deserializer::read(uint64_t& arg) {
 	std::string text;
 	in_ >> text;
 	if (text.size() == 0) {
-		return Error::NoError;
+		return Error::CorruptedArchive;
 	}
 	if (strspn(text.c_str(), "0123456789") == text.size()) {
 		try {
-			arg = std::stoi(text);
+			arg = std::stoull(text);
 		}
 		catch (std::out_of_range) {
 			return Error::CorruptedArchive;

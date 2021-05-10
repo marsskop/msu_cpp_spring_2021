@@ -27,8 +27,9 @@ void DefaultTest() {
 	Data1 x { 1, true, 2 };
 	std::stringstream stream;
 	Serializer serializer(stream);
-	serializer.save(x);
+	Error errx = serializer.save(x);
 
+	assert(errx == Error::NoError);
 	assert(stream.str() == "1 true 2 ");
 
 	Data1 y { 0, false, 0 };
@@ -73,12 +74,40 @@ void CorruptTest() {
 
 	Data2 k {1};
 	std::stringstream streamk;
-	streamk << "18446744073709551615";
+	streamk << "18446744073709551616";
 	Deserializer deserializerk(streamk);
 	const Error errk = deserializerk.load(k);
 
 	assert(errk == Error::CorruptedArchive);
 	assert(k.a == 1);
+
+	Data2 l {1};
+	std::stringstream streaml;
+	const uint64_t checkl = 18446744073709551615UL;
+	streaml << "18446744073709551615";
+	Deserializer deserializerl(streaml);
+	const Error errl = deserializerl.load(l);
+
+	assert(errl == Error::NoError);
+	assert(l.a == checkl);
+
+	Data2 m {1};
+	std::stringstream streamm;
+	streamm << "123str";
+	Deserializer deserializerm(streamm);
+	const Error errm = deserializerm.load(m);
+
+	assert(errm == Error::CorruptedArchive);
+	assert(m.a == 1);
+
+	Data3 n {true};
+	std::stringstream streamn;
+	streamm << "true12";
+	Deserializer deserializern(streamn);
+	const Error errn = deserializern.load(n);
+
+	assert(errn == Error::CorruptedArchive);
+	assert(n.a == true);
 }
 
 void ValidTest() {
@@ -142,7 +171,7 @@ void LimitTest() {
 	Deserializer deserializerx(streamx);
 	Error errx = deserializerx.load(x);
 
-	assert(errx == Error::NoError);
+	assert(errx == Error::CorruptedArchive);
 	assert(x.a == 12);
 	assert(x.b == false);
 	assert(x.c == 2);
@@ -163,7 +192,7 @@ void LimitTest() {
 	Deserializer deserializery(streamy);
 	Error erry = deserializery.load(y);
 
-	assert(erry == Error::NoError);
+	assert(erry == Error::CorruptedArchive);
 	assert(y.a == 1);
 
 	std::stringstream streamyy;
@@ -188,7 +217,7 @@ void LimitTest() {
 	Deserializer deserializerz(streamz);
 	Error errz = deserializerz.load(z);
 
-	assert(errz == Error::NoError);
+	assert(errz == Error::CorruptedArchive);
 	assert(z.a == true);
 
 	std::stringstream streamzz;
