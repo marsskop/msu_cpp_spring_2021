@@ -7,13 +7,14 @@
 #include <cassert>
 #include <exception>
 #include <vector>
+#include <type_traits>
 
-struct Error {
-	std::string message_;
-	const char* fileName_;
-	int line_;
-	Error(const std::string& message, const char* fileName, int line)
-	: message_(message), fileName_(fileName), line_(line) {}
+struct InvArgExcept : public std::invalid_argument {
+	using std::invalid_argument::invalid_argument;
+};
+
+struct DomExcept : public std::domain_error {
+	using std::domain_error::domain_error;
 };
 
 void convert_to_vec(std::vector<std::string>& args_vec) {
@@ -51,22 +52,26 @@ std::string format(const std::string& str, const Args& ...args) { // format("str
 	int len = str.size();
 	bool in_brackets = false;
 	int subst = -1;
+	int max_subst = -1;
 	std::string res = "";
 	for (int i = 0; i < len; i++) {
 		if (in_brackets) {
 			if (str[i] == '}') {
 				if (subst >= num_args) {
-					throw Error("Number in brackets is too large", __FILE__, __LINE__);
+					throw InvArgExcept("Number in brackets is too large");
 				}
 				if (subst == -1) {
-					throw Error("No number in brackets", __FILE__, __LINE__);
+					throw InvArgExcept("No number in brackets");
+				}
+				if (subst > max_subst) {
+					max_subst = subst;
 				}
 				res += args_vec[subst];
 				subst = -1;
 				in_brackets = false;
 			}
 			else if (i == len - 1) {
-				throw Error("End of string before closing brackets", __FILE__, __LINE__);
+				throw DomExcept("End of string before closing brackets");
 			}
 			else if (std::isdigit(str[i])) {
 				if (subst == -1) {
@@ -77,18 +82,24 @@ std::string format(const std::string& str, const Args& ...args) { // format("str
 				}
 			}
 			else {
-				throw Error("Not a number met inside brackets", __FILE__, __LINE__);
+				throw InvArgExcept("Not a number met inside brackets");
 			}
+		}
+		else if ((str[i] == '{') && (i == len - 1)) {
+			throw DomExcept("End of string before closing brackets");
 		}
 		else if (str[i] == '{') {
 			in_brackets = true;
 		}
 		else if (str[i] == '}') {
-			throw Error("Closing bracket before opening one", __FILE__, __LINE__);
+			throw DomExcept("Closing bracket before opening one");
 		}
 		else {
 			res += str[i];
 		}
+	}
+	if (max_subst < num_args - 1) {
+		throw DomExcept("Excess of arguments");
 	}
 	return res;
 }
