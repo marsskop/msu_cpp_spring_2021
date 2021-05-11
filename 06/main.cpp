@@ -30,6 +30,14 @@ void WrongInputTest() {
 	assert(except == "Not a number met inside brackets");
 
 	try {
+		auto text = format("{string}", 1);
+	}
+	catch (InvArgExcept& ex) {
+		except = ex.what();
+	}
+	assert(except == "Not a number met inside brackets");
+
+	try {
 		auto text = format("{}", 2);
 	}
 	catch (InvArgExcept& ex) {
@@ -70,12 +78,44 @@ void WrongInputTest() {
 	assert(except == "End of string before closing brackets");
 
 	try {
-		auto text = format({0}, 1, 2);
+		auto text = format("{0}", 1, 2);
 	}
 	catch (DomExcept& ex) {
 		except = ex.what();
 	}
 	assert(except == "Excess of arguments");
+
+	try {
+		auto text = format("{{0}}", 1);
+	}
+	catch (InvArgExcept& ex) {
+		except = ex.what();
+	}
+	assert(except == "Not a number met inside brackets");
+
+	try {
+		auto text = format("{0}}{1}", 1, 2);
+	}
+	catch (DomExcept& ex) {
+		except = ex.what();
+	}
+	assert(except == "Closing bracket before opening one");
+
+	try {
+		auto text = format("{0}{}", 1, 2);
+	}
+	catch (InvArgExcept& ex) {
+		except = ex.what();
+	}
+	assert(except == "No number in brackets");
+
+	try {
+		auto text = format("{18446744073709551616}", 0);
+	}
+	catch (InvArgExcept& ex) {
+		except = ex.what();
+	}
+	assert(except == "Number in brackets is too large");
 }
 
 int main() {

@@ -9,6 +9,8 @@
 #include <vector>
 #include <type_traits>
 
+const int INT_MAX = 2147483647;
+
 struct InvArgExcept : public std::invalid_argument {
 	using std::invalid_argument::invalid_argument;
 };
@@ -78,6 +80,9 @@ std::string format(const std::string& str, const Args& ...args) { // format("str
 					subst = char2int(str[i]);
 				}
 				else {
+					if (subst >= (INT_MAX - char2int(str[i])) / 10) {
+						throw InvArgExcept("Number in brackets is too large");
+					}
 					subst = subst * 10 + char2int(str[i]);
 				}
 			}
