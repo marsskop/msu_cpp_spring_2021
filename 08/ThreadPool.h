@@ -10,6 +10,8 @@
 #include <functional>
 #include <future>
 #include <stdexcept>
+#include <chrono>
+#include <cassert>
 
 class ThreadPool {
 public:
@@ -28,16 +30,13 @@ inline ThreadPool::ThreadPool(size_t poolSize) {
 	for (size_t i=0; i < poolSize; i++) {
 		threads.emplace_back([this]() {
 			while(true) {
-				std::function<void()> task;
-				{
-					std::unique_lock<std::mutex> lock(this->mut);
-					this->cv.wait(lock, [this]() {
-						return this->dead || !this->tasks.empty();
-					});
-					if (dead && tasks.empty()) { return; }
-					auto task = std::move(tasks.front());
-					tasks.pop();
-				}
+				std::unique_lock<std::mutex> lock(this->mut);
+				this->cv.wait(lock, [this]() {
+					return this->dead || !this->tasks.empty();
+				});
+				if (dead && tasks.empty()) { return; }
+				auto task = std::move(tasks.front());
+				tasks.pop();
 				task();
 			}
 		});
@@ -47,21 +46,18 @@ inline ThreadPool::ThreadPool(size_t poolSize) {
 ThreadPool::~ThreadPool() {
 	dead = true;
 	cv.notify_all();
-	for (auto* t : threads)
+	for (auto& t : threads)
 		t.join();
 }
 
 template <class Func, class... Args>
 auto ThreadPool::exec(Func func, Args... args) -> std::future<decltype(func(args...))> {
-	auto task = std::make_shared<std::packaged_task<decltype(func(args...))()>>(std::bind());
-	auto res = task->get_future();
-	{
-		std::unique_lock<std::mutex> lock(mut);
-		if (dead) { throw std::runtime_error("Can't exec in dead ThreadPool"); }
-		tasks.emplace([task](){(*task)();})
-	}
+	std::unique_lock<std::mutex> lock(mut);
+	auto task = std::make_shared<std::packaged_task<decltype(func(args...))()>>(std::bind(func, args...));
+	if (dead) { throw std::runtime_error("Can't exec in dead ThreadPool"); }
+	tasks.emplace([task](){ (*task)(); });
 	cv.notify_one();
-	return res;
+	return task->get_future();
 }
 
 #endif //THREADPOOL_H
