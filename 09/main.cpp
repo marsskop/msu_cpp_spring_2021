@@ -16,6 +16,7 @@ void DefaultTest() {
 	fcheck.read(reinterpret_cast<char*>(&pred_n), sizeof(uint64_t));
 	while (!fcheck.eof()) {
 		fcheck.read(reinterpret_cast<char*>(&n), sizeof(uint64_t));
+		std::cout << n;
 		assert(pred_n <= n);
 		pred_n = n;
 	}

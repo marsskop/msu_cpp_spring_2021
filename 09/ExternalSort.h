@@ -14,7 +14,7 @@ const uint64_t MAX_CAP = 1048576; // 8388608 / 8
 struct file_interface {
 	std::ifstream read;
 	std::ofstream write;
-	std::string name;
+	std::string name = "";
 	uint64_t size_ = 0;
 };
 
@@ -220,9 +220,9 @@ std::string MergeSortThreaded(const std::string filename) {
 	if (size_input % MAX_CAP) {
 		num_files++;
 	}
-	std::vector <file_interface> chunks = CreateFiles(num_files, filename);
+	std::vector<file_interface> chunks = CreateFiles(num_files, filename);
 	if (num_files > 1) {
-		uint64_t div = file_num / 2 - 1;
+		uint64_t div = num_files / 2 - 1;
 		std::thread first(SortFiles, std::ref(chunks), 0, div, 1);
 		std::thread second(SortFiles, std::ref(chunks), div + 1, num_files - 1, 2);
 		first.join();
